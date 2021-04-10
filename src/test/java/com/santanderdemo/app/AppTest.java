@@ -2,6 +2,7 @@ package com.santanderdemo.app;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -39,9 +40,10 @@ public class AppTest {
         Subscriber client = new Subscriber();
         // Correct case
         client.onMessage("106, EUR/USD, 1.1000,1.2000,01-06-2020 12:01:01:001");
-        assertEquals(
-                "{ id='106', name=' EUR/USD', bid='1.0989001', ask='1.2012001', timestamp='Mon Jun 01 12:01:01 BST 2020'}",
-                out.toString());
+        String actualOutput = out.toString();
+        actualOutput = actualOutput.substring(actualOutput.indexOf('{'), actualOutput.indexOf('}')+1);
+        String expectedOutput = "{ id='106', name=' EUR/USD', bid='1.0989001', ask='1.2012001', timestamp='Mon Jun 01 12:01:01 BST 2020'}";
+        assertTrue(expectedOutput.equals(actualOutput));
     }
 
     @Test
@@ -49,9 +51,11 @@ public class AppTest {
         Subscriber client = new Subscriber();
         // Wrong case
         client.onMessage("107, EUR/JPY, 119.60,119.90,01-06-2020 12:01:02:002");
+        String actualOutput = out.toString();
+        actualOutput = actualOutput.substring(actualOutput.indexOf('{'), actualOutput.indexOf('}')+1);
         assertNotEquals(
                 "{ id='200', name=' EUR/JPY', bid='100', ask='120.019905', timestamp='Mon Jun 01 12:01:02 BST 2020'}",
-                out.toString());
+                actualOutput);
     }
 
     @Test
